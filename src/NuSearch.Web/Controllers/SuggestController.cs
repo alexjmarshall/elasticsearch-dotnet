@@ -28,6 +28,7 @@ namespace NuSearch.Web.Controllers
                     .Completion("package-suggestions", c => c
                         .Prefix(form.Query)
                         .Field(p => p.Suggest)
+                        .Fuzzy()
                     )
                 )
             );
