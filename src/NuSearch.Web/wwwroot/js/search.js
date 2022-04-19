@@ -54,7 +54,7 @@
       }
     )
     .on('typeahead:selected', function(e, o) {
-      $("#query").value(o.id);
+      $("#query").val(o.id);
       $("form#search-criteria").submit();
     });
   }
