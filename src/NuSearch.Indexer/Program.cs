@@ -30,6 +30,22 @@ namespace NuSearch.Indexer
 
 		static void IndexDumps()
 		{
+			var packages = DumpReader.Dumps.First().NugetPackages;
+			
+			Console.Write("Indexing documents into Elasticsearch...");
+
+			foreach (var package in packages)
+			{
+				var result = Client.IndexDocument(package);
+
+				if (!result.IsValid)
+				{
+					Console.WriteLine(result.DebugInformation);
+					Console.Read();
+					Environment.Exit(1);
+				}
+			}
+
 			Console.WriteLine("Done.");
 		}
 	}
