@@ -78,6 +78,7 @@ namespace NuSearch.Indexer
 					.Analysis(analysis => analysis
 						.Tokenizers(tokenizers => tokenizers // register nuget-id-tokenizer
 							.Pattern("nuget-id-tokenizer", p => p.Pattern(@"\W+")) // splits text on any non-word character
+							.Pattern("nuget-author-tokenizer", p => p.Pattern(@",\s+")) // splits text on a comma
 						)
 						.TokenFilters(tokenfilters => tokenfilters
 							.WordDelimiter("nuget-id-words", w => w // register nuget-id-words filter
@@ -97,6 +98,9 @@ namespace NuSearch.Indexer
 								.Tokenizer("keyword") // emits the provided text as a single term
 								.Filters("lowercase")
 							)
+							.Custom("nuget-author-analyzer", c => c
+								.Tokenizer("nuget-author-tokenizer")
+							)
 						)
 					)
 				)
@@ -104,8 +108,7 @@ namespace NuSearch.Indexer
 					.AutoMap()
 					.Properties(ps => ps
 						.Text(s => s
-							.Name(p => p.Id)
-							.Analyzer("nuget-id-analyzer")
+							.Name(p => p.Id).Analyzer("nuget-id-analyzer")
 							.Fields(f => f
 								.Text(p => p.Name("keyword").Analyzer("nuget-id-keyword"))
 								.Keyword(p => p.Name("raw")) // id.raw field has not been analyzed
@@ -126,12 +129,10 @@ namespace NuSearch.Indexer
 							.AutoMap()
 							.Properties(props => props
 								.Text(t => t
-									.Name(a => a.Name)
+									.Name(a => a.Name).Analyzer("nuget-author-analyzer")
 									.Fielddata()
 									.Fields(fs => fs
-										.Keyword(ss => ss
-											.Name("raw")
-										)
+										.Keyword(ss => ss.Name("raw"))
 									)
 								)
 							)
