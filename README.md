@@ -4,7 +4,7 @@
 1) download this repo
 2) download elasticsearch 7.17.2 ([link](https://www.elastic.co/downloads/past-releases/elasticsearch-7-17-2)) and install
 3) download .NET Core SDK 3.1.418 LTS ([link](https://dotnet.microsoft.com/en-us/download/dotnet/3.1)) and install
-4) download NuGet package dump ([link](https://nusearch.blob.core.windows.net/dump/nuget-data-jul-2017.zip)) and extract it inside this repo (afterwards there should be a `nuget-data` folder containing ~1000 xml files inside the folder `elasticsearch-dotnet`)
+4) download NuGet package dump ([link](https://nusearch.blob.core.windows.net/dump/nuget-data-jul-2017.zip)) and extract it inside this project's directory (afterwards there should be a `nuget-data` folder containing ~1000 xml files inside the folder `elasticsearch-dotnet`)
 5) install and start Elasticsearch (e.g. by extracting the download to the folder `elasticsearch-7.17.2`, navigating to that folder in a terminal and entering `.\bin\elasticsearch.bat`)
 6) in a terminal, navigate to `elasticsearch-dotnet\src` and enter `dotnet restore` and `dotnet build`
 7) navigate to `\elasticsearch-dotnet\src\NuSearch.Indexer` and enter `dotnet run` to index the data into Elasticsearch (and grab a :coffee:)
