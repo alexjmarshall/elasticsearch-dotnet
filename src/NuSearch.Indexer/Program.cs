@@ -75,10 +75,42 @@ namespace NuSearch.Indexer
 					.NumberOfShards(2)
 					.NumberOfReplicas(0)
 					.Setting("index.mapping.nested_objects.limit", 12000)
+					.Analysis(analysis => analysis
+						.Tokenizers(tokenizers => tokenizers // register nuget-id-tokenizer
+							.Pattern("nuget-id-tokenizer", p => p.Pattern(@"\W+")) // splits text on any non-word character
+						)
+						.TokenFilters(tokenfilters => tokenfilters
+							.WordDelimiter("nuget-id-words", w => w // register nuget-id-words filter
+								.SplitOnCaseChange()
+								.PreserveOriginal()
+								.SplitOnNumerics()
+								.GenerateNumberParts(false)
+								.GenerateWordParts()
+							)
+						)
+						.Analyzers(analyzers => analyzers
+							.Custom("nuget-id-analyzer", c => c
+								.Tokenizer("nuget-id-tokenizer")
+								.Filters("nuget-id-words", "lowercase")
+							)
+							.Custom("nuget-id-keyword", c => c
+								.Tokenizer("keyword") // emits the provided text as a single term
+								.Filters("lowercase")
+							)
+						)
+					)
 				)
 				.Map<Package>(map => map
 					.AutoMap()
 					.Properties(ps => ps
+						.Text(s => s
+							.Name(p => p.Id)
+							.Analyzer("nuget-id-analyzer")
+							.Fields(f => f
+								.Text(p => p.Name("keyword").Analyzer("nuget-id-keyword"))
+								.Keyword(p => p.Name("raw")) // id.raw field has not been analyzed
+							)
+						)
 						.Nested<PackageVersion>(n => n
 							.Name(p => p.Versions.First())
 							.AutoMap()
