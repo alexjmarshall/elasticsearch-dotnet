@@ -46,6 +46,24 @@ namespace NuSearch.Web.Controllers
 						)
 					)
 				)
+				.Sort(sort =>
+				{
+					if (form.Sort == SearchSort.Downloads)
+					{
+						return sort.Descending(p => p.DownloadCount);
+					}
+					if (form.Sort == SearchSort.Recent)
+					{
+						return sort.Field(sortField => sortField
+							.Nested(n => n
+								.Path(p => p.Versions)
+							)
+							.Field(p => p.Versions.First().LastUpdated)
+							.Descending()
+						);
+					}
+					return sort.Descending(SortSpecialField.Score);
+				})
 			);
 			var model = new SearchViewModel()
 			{
