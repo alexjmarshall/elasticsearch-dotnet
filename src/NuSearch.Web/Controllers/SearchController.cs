@@ -21,11 +21,6 @@ namespace NuSearch.Web.Controllers
 				.Size(form.PageSize)
 				// NEST functions map one-to-one with Elasticsearch query JSON
 				.Query(q => q
-				    .Match(m => m
-						.Field(p => p.Id.Suffix("keyword")) // give a very large boost here if an exact match on Id as a keyword is found
-						.Boost(1000)
-						.Query(form.Query)
-					) || q
 					.FunctionScore(fs => fs
 						.MaxBoost(50)
 						.Functions(ff => ff
@@ -37,6 +32,7 @@ namespace NuSearch.Web.Controllers
 						.Query(query => query
 							.MultiMatch(m => m
 								.Fields(f => f
+									.Field(p => p.Id.Suffix("keyword"), 1000)
 									.Field(p => p.Id, 1.5)
 									.Field(p => p.Summary, 0.8)
 								)
