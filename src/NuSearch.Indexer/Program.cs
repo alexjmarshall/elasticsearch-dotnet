@@ -58,7 +58,13 @@ namespace NuSearch.Indexer
 			));
 
 			waitHandle.Wait();
-			captureInfo?.Throw();
+
+			// only crash program if exception is not coming from the .Net client
+			if (!(captureInfo?.SourceException is Elasticsearch.Net.ElasticsearchClientException)) 
+			{
+				captureInfo.Throw();
+			}
+
 			Console.WriteLine("Done.");
 		}
 
