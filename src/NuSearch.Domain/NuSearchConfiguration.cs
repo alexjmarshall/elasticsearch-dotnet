@@ -34,6 +34,6 @@ namespace NuSearch.Domain
 		public static string CreateIndexName() => $"{LiveIndexAlias}-{DateTime.UtcNow:dd-MM-yyyy-HH-mm-ss}";
 
 		public static string PackagePath => 
-			RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? @"C:\nuget-data" : "/nuget-data";
+			RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? @"..\..\nuget-data" : "/nuget-data";
 	}
 }
