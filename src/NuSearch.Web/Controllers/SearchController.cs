@@ -47,7 +47,7 @@ namespace NuSearch.Web.Controllers
 					) && +q.Nested(n => n // + here wraps query in a bool query filter clause, so as not to calculate a score for this query
 						.Path(p => p.Authors)
 						.Query(nq => +nq
-							.Term(p => p.Authors.First().Name.Suffix("raw"), form.Author)
+							.Term(p => p.Authors.First().Name, form.Author)
 						)
 					)
 				)
@@ -56,7 +56,7 @@ namespace NuSearch.Web.Controllers
 						.Path(p => p.Authors)
 						.Aggregations(aa => aa
 							.Terms("author-names", ts => ts
-								.Field(p => p.Authors.First().Name.Suffix("raw"))
+								.Field(p => p.Authors.First().Name)
 							)
 						)
 					)
