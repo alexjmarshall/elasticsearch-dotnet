@@ -13,7 +13,8 @@ namespace NuSearch.Domain
 
 		static NuSearchConfiguration()
 		{
-			_connectionSettings = new ConnectionSettings(CreateUri(9200));
+			_connectionSettings = new ConnectionSettings(CreateUri(9200))
+				.DefaultIndex("nusearch");
 		}
 
 		private static readonly ConnectionSettings _connectionSettings;
