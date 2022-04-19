@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NuSearch.Web", "NuSearch.We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NuSearch.Domain", "NuSearch.Domain\NuSearch.Domain.csproj", "{58FB675E-6B6F-4C05-832C-A347FD5A37B8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NuSearch.Harvester", "NuSearch.Harvester\NuSearch.Harvester.csproj", "{C66C9296-FD72-4625-8440-02BDCC3A0061}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NuSearch.Indexer", "NuSearch.Indexer\NuSearch.Indexer.csproj", "{82943C55-559F-4EF8-B953-61301DB2D03A}"
 EndProject
 Global
