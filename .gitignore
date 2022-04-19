@@ -66,3 +66,4 @@ YamlCache
 .idea
 
 /packages
+/nuget-data
