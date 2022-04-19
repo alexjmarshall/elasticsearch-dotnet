@@ -2,6 +2,7 @@
 
   $("select").change(function() { $("form#search-criteria").submit(); });
   $("input[type='checkbox']").change(function() { $("form#search-criteria").submit(); });
+  jQuery.timeago.settings.cutoff = 1000*60*60*24*365; // show regular date if more than 1 year in the past
   $(".timeago").timeago();
 
   setupTypeAhead();
