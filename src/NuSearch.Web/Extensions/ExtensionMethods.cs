@@ -35,7 +35,6 @@ namespace NuSearch.Web.Extensions
 			if (form.PageSize != SearchForm.DefaultPageSize) properties.Add($"pagesize={form.PageSize}");
 			if (form.Sort != SearchForm.DefaultSort) 
 				properties.Add($"sort={u(form.Sort.ToString().ToLowerInvariant())}");
-			if (form.Significance) properties.Add($"significance={form.Significance.ToString().ToLowerInvariant()}");
 			if (!string.IsNullOrEmpty(form.Query)) properties.Add($"query={u(form.Query)}");
 			if (!string.IsNullOrEmpty(form.Author)) properties.Add($"author={u(form.Author)}");
 			if (form.Tags != null && form.Tags.Length > 0)

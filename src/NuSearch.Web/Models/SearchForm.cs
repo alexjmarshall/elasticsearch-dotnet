@@ -16,7 +16,6 @@ namespace NuSearch.Web.Models
 		public const SearchSort DefaultSort = SearchSort.Relevance;
 
 		public int Page { get; set; }
-		public bool Significance { get; set; }
 		public string Query { get; set; }
 		public string Author { get; set; }
 		public string[] Tags { get; set; }
@@ -34,7 +33,7 @@ namespace NuSearch.Web.Models
 		public SearchForm Clone() => new SearchForm
 		{
 			Page = this.Page,
-			Significance = this.Significance,
+			// Significance = this.Significance,
 			Query = this.Query,
 			Author = this.Author,
 			Tags = this.Tags,
