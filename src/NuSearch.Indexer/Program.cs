@@ -136,6 +136,9 @@ namespace NuSearch.Indexer
 								)
 							)
 						)
+						.Completion(c => c
+							.Name(p => p.Suggest)
+						)
 					)
 				)
 			);
