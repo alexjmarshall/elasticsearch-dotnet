@@ -128,6 +128,11 @@ namespace NuSearch.Indexer
 								.Text(t => t
 									.Name(a => a.Name)
 									.Fielddata()
+									.Fields(fs => fs
+										.Keyword(ss => ss
+											.Name("raw")
+										)
+									)
 								)
 							)
 						)
