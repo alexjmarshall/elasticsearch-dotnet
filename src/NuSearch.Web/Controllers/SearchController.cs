@@ -16,8 +16,13 @@ namespace NuSearch.Web.Controllers
 	    [HttpGet]
         public IActionResult Index(SearchForm form)
         {
-			// TODO: You'll write most of the implementation here
-			var model = new SearchViewModel();
+			var result = _client.Search<Package>(s => s);
+			var model = new SearchViewModel()
+			{
+				Hits = result.Hits,
+				Total = result.Total,
+				Form = form
+			};
 
 	        return View(model);
 		}
