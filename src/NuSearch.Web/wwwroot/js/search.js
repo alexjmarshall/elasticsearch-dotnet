@@ -52,16 +52,13 @@
         },
         source: remoteHandler
       }
-    ).on('typeahead:selected', function(e, o) {
-        window.location.href = "https://www.nuget.org/packages/" + o.id;
-      })
-      .on('typeahead:selected', function(e, o) {
-        $("#query").focus().select();
-      });
+    )
+    .on('typeahead:selected', function(e, o) {
+      $("#query").value(o.id);
+      $("form#search-criteria").submit();
+    });
   }
 
   $("#query").focus().select();
 
 });
-
-
