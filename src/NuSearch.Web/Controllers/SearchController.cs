@@ -16,6 +16,7 @@ namespace NuSearch.Web.Controllers
 	    [HttpGet]
         public IActionResult Index(SearchForm form)
         {
+			var numAuthors = form.Authors.Length;
 			var result = _client.Search<Package>(s => s
 				.From((form.Page - 1) * form.PageSize)
 				.Size(form.PageSize)
@@ -43,7 +44,14 @@ namespace NuSearch.Web.Controllers
 					) && +q.Nested(n => n // + here wraps query in a bool query filter clause, so as not to calculate a score for this query
 						.Path(p => p.Authors)
 						.Query(nq => +nq
-							.Term(p => p.Authors.First().Name, form.Author)
+							.TermsSet(c => c
+								.Name("named_query")
+								.Field(p => p.Authors.First().Name)
+								.Terms(form.Authors)
+								.MinimumShouldMatchScript(s => s
+									.Source(numAuthors.ToString())
+								)
+							)
 						)
 					)
 				)
