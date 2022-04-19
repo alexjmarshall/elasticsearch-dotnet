@@ -103,6 +103,8 @@ namespace NuSearch.Indexer
 				)
 			);
 		}
+		// applies nusearch alias to the current live index and removes it from other indices
+		// applies nusearch-old alias to a maximum of two previously made indices, and deletes the rest
 		private static void SwapAlias()
 		{
 			var indexExists = Client.Indices.Exists(NuSearchConfiguration.LiveIndexAlias).Exists;
