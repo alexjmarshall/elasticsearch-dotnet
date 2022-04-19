@@ -22,6 +22,7 @@ namespace NuSearch.Indexer
 				: NuSearchConfiguration.PackagePath;
 			DumpReader = new NugetDumpReader(directory);
 
+			CreateIndex();
 			IndexDumps();
 
 			Console.WriteLine("Press any key to exit.");
@@ -30,20 +31,34 @@ namespace NuSearch.Indexer
 
 		static void IndexDumps()
 		{
-			var packages = DumpReader.GetPackages().Take(100);
-			
+			Console.WriteLine("Setting up a lazy xml files reader that yields packages...");
+			var packages = DumpReader.GetPackages().Take(1000);
+
 			Console.Write("Indexing documents into Elasticsearch...");
+			var waitHandle = new CountdownEvent(1);
 
-			var result = Client.IndexMany(packages);
+			var bulkAll = Client.BulkAll(packages, b => b
+				.BackOffRetries(2)
+				.BackOffTime("30s")
+				.MaxDegreeOfParallelism(4)
+				.Size(1000)
+				.RefreshOnCompleted(true)
+			);
 
-			if (!result.IsValid)
-			{
-				foreach (var item in result.ItemsWithErrors)
+			ExceptionDispatchInfo captureInfo = null;
+
+			bulkAll.Subscribe(new BulkAllObserver(
+				onNext: b => Console.Write("."),
+				onError: e =>
 				{
-					Console.WriteLine("Failed to index document {0}: {1}", item.Id, item.Error);
-				}
-			}
+					captureInfo = ExceptionDispatchInfo.Capture(e);
+					waitHandle.Signal();
+				},
+				onCompleted: () => waitHandle.Signal()
+			));
 
+			waitHandle.Wait();
+			captureInfo?.Throw();
 			Console.WriteLine("Done.");
 		}
 
