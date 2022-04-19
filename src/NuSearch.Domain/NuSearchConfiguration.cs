@@ -14,7 +14,10 @@ namespace NuSearch.Domain
 		static NuSearchConfiguration()
 		{
 			_connectionSettings = new ConnectionSettings(CreateUri(9200))
-				.DefaultIndex("nusearch");
+				.DefaultIndex("nusearch")
+				.DefaultMappingFor<FeedPackage>(i=>i
+					.IndexName("nusearch")
+				);
 		}
 
 		private static readonly ConnectionSettings _connectionSettings;
