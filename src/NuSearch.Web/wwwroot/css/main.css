@@ -157,12 +157,9 @@ a.list-group-item-warning:hover
 {
 	color: #ec971f;
 }
-
-
-
-
-
-
+.home-link:hover {
+	color: #ec971f;
+}
 #query-container
 {
 	margin:0.67em 0;
