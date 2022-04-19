@@ -43,5 +43,4 @@ namespace NuSearch.Web.Models
 		};
 	}
 
-
 }
