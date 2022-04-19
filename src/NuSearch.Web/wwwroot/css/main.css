@@ -8,10 +8,6 @@ h1 > a:hover
 	text-decoration: none;
 	color: inherit;
 }
-.bound-container
-{
-	max-width: 888px;
-}
 .glyphicon
 {
 	top:3px;
@@ -49,7 +45,11 @@ h1 > a:hover
 {
 	padding-bottom:40px;
 }
-@media only screen and (min-width: 480px) {
+@media only screen and (min-width: 481px) {
+	.bound-container
+	{
+		width: 80%;
+	}
 	.header-site .bound-container
 	{
 		background-image: url('/images/logo.png');
@@ -179,6 +179,7 @@ a.list-group-item-warning:hover
 #search-criteria .label
 {
 	vertical-align: middle;
+	padding-top: 9px;
 }
 .twitter-typeahead { 
 	display:block !important;
