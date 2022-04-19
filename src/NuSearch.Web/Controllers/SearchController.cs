@@ -21,11 +21,8 @@ namespace NuSearch.Web.Controllers
 				// NEST functions map one-to-one with Elasticsearch query JSON
 				.Query(q => q
 					.MultiMatch(m => m
-						.Fields(f => f
-							.Fields(
-								p => p.Id, 
-								p => p.Summary)
-							)
+						.Fields(f => f.Fields(p => p.Id, p => p.Summary))
+						.Operator(Operator.And)
 						.Query(form.Query)
 					)
 				)
