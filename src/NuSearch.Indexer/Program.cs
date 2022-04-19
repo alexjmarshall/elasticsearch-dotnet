@@ -34,16 +34,20 @@ namespace NuSearch.Indexer
 			
 			Console.Write("Indexing documents into Elasticsearch...");
 
-			foreach (var package in packages)
+			var result = Client.Bulk(b =>
 			{
-				var result = Client.IndexDocument(package);
-
-				if (!result.IsValid)
+				foreach(var package in packages)
 				{
-					Console.WriteLine(result.DebugInformation);
-					Console.Read();
-					Environment.Exit(1);
+					b.Index<FeedPackage>(i => i.Document(package));
 				}
+
+				return b;
+			});
+
+			if (!result.IsValid)
+			{
+				foreach (var item in result.ItemsWithErrors)
+					Console.WriteLine("Failed to index document {0}: {1}", item.Id, item.Error);
 			}
 
 			Console.WriteLine("Done.");
