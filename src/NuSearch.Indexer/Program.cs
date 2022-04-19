@@ -30,7 +30,7 @@ namespace NuSearch.Indexer
 
 		static void IndexDumps()
 		{
-			var packages = DumpReader.Dumps.First().NugetPackages;
+			var packages = DumpReader.GetPackages().Take(100);
 			
 			Console.Write("Indexing documents into Elasticsearch...");
 
@@ -39,10 +39,48 @@ namespace NuSearch.Indexer
 			if (!result.IsValid)
 			{
 				foreach (var item in result.ItemsWithErrors)
+				{
 					Console.WriteLine("Failed to index document {0}: {1}", item.Id, item.Error);
+				}
 			}
 
 			Console.WriteLine("Done.");
+		}
+
+		static void CreateIndex()
+		{
+			Client.Indices.Create("nusearch", i => i
+				.Settings(s => s
+					.NumberOfShards(2)
+					.NumberOfReplicas(0)
+					.Setting("index.mapping.nested_objects.limit", 12000)
+				)
+				.Map<Package>(map => map
+					.AutoMap()
+					.Properties(ps => ps
+						.Nested<PackageVersion>(n => n
+							.Name(p => p.Versions.First())
+							.AutoMap()
+							.Properties(pps => pps
+								.Nested<PackageDependency>(nn => nn
+									.Name(pv => pv.Dependencies.First())
+									.AutoMap()
+								)
+							)
+						)
+						.Nested<PackageAuthor>(n => n
+							.Name(p => p.Authors.First())
+							.AutoMap()
+							.Properties(props => props
+								.Text(t => t
+									.Name(a => a.Name)
+									.Fielddata()
+								)
+							)
+						)
+					)
+				)
+			);
 		}
 	}
 }
