@@ -10,7 +10,7 @@
 <body>
 	<nav class="navbar navbar-default header-site">
 		<div class="container-fluid bound-container ">
-			<h1>nusear.ch</h1>
+			<h1><a class="home-link" href="/">nusear.ch</a></h1>
 			@using (Html.BeginForm("Index", "Search", FormMethod.Get))
 			{
 				@await Html.PartialAsync("RememberForm", Model.Form)
