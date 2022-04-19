@@ -13,7 +13,7 @@ namespace NuSearch.Indexer
 	{
 		private static ElasticClient Client { get; set; }
 		private static NugetDumpReader DumpReader { get; set; }
-
+		private static string CurrentIndexName { get; set; }
 		static void Main(string[] args)
 		{
 			Client = NuSearchConfiguration.GetClient();
@@ -21,9 +21,11 @@ namespace NuSearch.Indexer
 				? args[0] 
 				: NuSearchConfiguration.PackagePath;
 			DumpReader = new NugetDumpReader(directory);
+			CurrentIndexName = NuSearchConfiguration.CreateIndexName();
 
 			CreateIndex();
 			IndexDumps();
+			SwapAlias();
 
 			Console.WriteLine("Press any key to exit.");
 			Console.ReadKey();
@@ -38,6 +40,7 @@ namespace NuSearch.Indexer
 			var waitHandle = new CountdownEvent(1);
 
 			var bulkAll = Client.BulkAll(packages, b => b
+				.Index(CurrentIndexName)
 				.BackOffRetries(2)
 				.BackOffTime("30s")
 				.MaxDegreeOfParallelism(4)
@@ -59,18 +62,15 @@ namespace NuSearch.Indexer
 
 			waitHandle.Wait();
 
-			// only crash program if exception is not coming from the .Net client
-			if (!(captureInfo?.SourceException is Elasticsearch.Net.ElasticsearchClientException)) 
-			{
-				captureInfo.Throw();
+			if (!(captureInfo is null)) {
+				Console.WriteLine(captureInfo.SourceException.Message);
 			}
 
 			Console.WriteLine("Done.");
 		}
-
 		static void CreateIndex()
 		{
-			Client.Indices.Create("nusearch", i => i
+			Client.Indices.Create(CurrentIndexName, i => i
 				.Settings(s => s
 					.NumberOfShards(2)
 					.NumberOfReplicas(0)
@@ -102,6 +102,34 @@ namespace NuSearch.Indexer
 					)
 				)
 			);
+		}
+		private static void SwapAlias()
+		{
+			var indexExists = Client.Indices.Exists(NuSearchConfiguration.LiveIndexAlias).Exists;
+
+			Client.Indices.BulkAlias(aliases =>
+			{
+				if (indexExists)
+				{
+					aliases.Add(a => a
+						.Alias(NuSearchConfiguration.OldIndexAlias)
+						.Index(Client.GetIndicesPointingToAlias(NuSearchConfiguration.LiveIndexAlias).First())
+					);
+				}
+
+				return aliases
+					.Remove(a => a.Alias(NuSearchConfiguration.LiveIndexAlias).Index("*"))
+					.Add(a => a.Alias(NuSearchConfiguration.LiveIndexAlias).Index(CurrentIndexName));
+			});
+
+			var oldIndices = Client.GetIndicesPointingToAlias(NuSearchConfiguration.OldIndexAlias)
+				.OrderByDescending(name => name)
+				.Skip(2);
+
+			foreach (var oldIndex in oldIndices)
+			{
+				Client.Indices.Delete(oldIndex);
+			}
 		}
 	}
 }
