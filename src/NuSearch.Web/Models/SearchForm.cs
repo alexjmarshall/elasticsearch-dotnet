@@ -33,7 +33,6 @@ namespace NuSearch.Web.Models
 		public SearchForm Clone() => new SearchForm
 		{
 			Page = this.Page,
-			// Significance = this.Significance,
 			Query = this.Query,
 			Author = this.Author,
 			Tags = this.Tags,
