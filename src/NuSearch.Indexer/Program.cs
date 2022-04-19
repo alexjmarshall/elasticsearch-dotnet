@@ -88,11 +88,13 @@ namespace NuSearch.Indexer
 								.GenerateNumberParts(false)
 								.GenerateWordParts()
 							)
+							.KeywordMarker("stem-filter", f => f.Keywords("engine", "engines"))
+							.Stop("stop-words-filter", f => f.StopWords("Inc."))
 						)
 						.Analyzers(analyzers => analyzers
 							.Custom("nuget-id-analyzer", c => c
 								.Tokenizer("nuget-id-tokenizer")
-								.Filters("nuget-id-words", "lowercase")
+								.Filters("nuget-id-words", "lowercase", "stem-filter", "porter_stem")
 							)
 							.Custom("nuget-id-keyword", c => c
 								.Tokenizer("keyword") // emits the provided text as a single term
@@ -100,6 +102,7 @@ namespace NuSearch.Indexer
 							)
 							.Custom("nuget-author-analyzer", c => c
 								.Tokenizer("nuget-author-tokenizer")
+								.Filters("stop-words-filter")
 							)
 						)
 					)
