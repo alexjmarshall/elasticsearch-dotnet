@@ -34,7 +34,7 @@ namespace NuSearch.Indexer
 		static void IndexDumps()
 		{
 			Console.WriteLine("Setting up a lazy xml files reader that yields packages...");
-			var packages = DumpReader.GetPackages().Take(1000);
+			var packages = DumpReader.GetPackages();
 
 			Console.Write("Indexing documents into Elasticsearch...");
 			var waitHandle = new CountdownEvent(1);
