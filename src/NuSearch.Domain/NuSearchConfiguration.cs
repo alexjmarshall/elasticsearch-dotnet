@@ -16,7 +16,8 @@ namespace NuSearch.Domain
 			_connectionSettings = new ConnectionSettings(CreateUri(9200))
 				.DefaultMappingFor<Package>(i => i
 					.IndexName("nusearch")
-				);
+				)
+				.PrettyJson();
 		}
 
 		private static readonly ConnectionSettings _connectionSettings;
