@@ -17,7 +17,7 @@ namespace NuSearch.Web.Models
 
 		public int Page { get; set; }
 		public string Query { get; set; }
-		public string Author { get; set; }
+		public string[] Authors { get; set; }
 		public string[] Tags { get; set; }
 		public int PageSize { get; set; }
 		public SearchSort Sort { get; set; }
@@ -27,6 +27,7 @@ namespace NuSearch.Web.Models
 			this.PageSize = DefaultPageSize;
 			this.Page = DefaultPage;
 			this.Sort = DefaultSort;
+			this.Authors = Array.Empty<string>();
 			this.Tags = Array.Empty<string>();
 		}
 
@@ -34,7 +35,7 @@ namespace NuSearch.Web.Models
 		{
 			Page = this.Page,
 			Query = this.Query,
-			Author = this.Author,
+			Authors = this.Authors,
 			Tags = this.Tags,
 			PageSize = this.PageSize,
 			Sort = this.Sort,

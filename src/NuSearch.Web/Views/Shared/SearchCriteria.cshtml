@@ -9,20 +9,13 @@
 			<span class="label label-primary">"@Model.Form.Query" <a class="glyphicon glyphicon-remove" href="@Model.UrlForFirstPage(f=> { f.Query = null; })"></a></span>
 		</span>
 	}
-	@if (!string.IsNullOrEmpty(Model.Form.Author))
+	@if (Model.Form.Authors != null && Model.Form.Authors.Length > 0)
 	{
 		<span class="text-warning">
-			having an <span class="label label-info">Author</span> named
-			<a class="label label-warning" href="@Model.UrlForFirstPage(f => { f.Author = null; })">@Model.Form.Author <span class="glyphicon glyphicon-remove"></span></a>
-		</span>
-	}
-	@if (Model.Form.Tags != null && Model.Form.Tags.Length > 0)
-	{
-		<span class="text-warning">
-			having the <span class="label label-info">Tags</span> 
-			@foreach (var t in Model.Form.Tags)
+			having the <span class="label label-info">Authors</span> 
+			@foreach (var a in Model.Form.Authors)
 			{
-				<a class="label label-warning" href="@Model.UrlForFirstPage(f => { f.Tags = Model.Form.Tags.Except(new[]{t}).ToArray(); })">@t <span class="glyphicon glyphicon-remove"></span></a>
+				<a class="label label-warning" href="@Model.UrlForFirstPage(f => { f.Authors = Model.Form.Authors.Except(new[]{a}).ToArray(); })">@a <span class="glyphicon glyphicon-remove"></span></a>
 			}
 		</span>
 	}

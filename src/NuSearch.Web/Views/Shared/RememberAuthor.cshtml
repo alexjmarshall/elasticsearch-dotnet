@@ -1,7 +1,11 @@
 ﻿@using NuSearch.Web.Models
 @model SearchForm
 
-@if (!string.IsNullOrEmpty(Model.Author))
+@if (Model.Authors != null && Model.Authors.Length > 0)
 {
-	<input name="@Html.NameFor(m=>m.Author).ToLowerInvariant()" type="hidden" value="@Model.Author"/>
+	@foreach (var a in Model.Authors)
+	{
+		<input name="@Html.NameFor(m=>m.Authors).ToLowerInvariant()" type="hidden" value="@a"/>
+	}
+	
 }
