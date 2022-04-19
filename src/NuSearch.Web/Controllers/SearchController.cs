@@ -46,6 +46,16 @@ namespace NuSearch.Web.Controllers
 						)
 					)
 				)
+				.Aggregations(a => a
+					.Nested("authors", n => n
+						.Path(p => p.Authors)
+						.Aggregations(aa => aa
+							.Terms("author-names", ts => ts
+								.Field(p => p.Authors.First().Name)
+							)
+						)
+					)
+				)
 				.Sort(sort =>
 				{
 					if (form.Sort == SearchSort.Downloads)
@@ -65,12 +75,19 @@ namespace NuSearch.Web.Controllers
 					return sort.Descending(SortSpecialField.Score);
 				})
 			);
+
+			var authors = result.Aggregations.Nested("authors")
+                .Terms("author-names")
+                .Buckets
+                .ToDictionary(k => k.Key, v => v.DocCount);
+
 			var model = new SearchViewModel()
 			{
 				Hits = result.Hits,
 				Total = result.Total,
 				Form = form,
-				TotalPages = (int)Math.Ceiling(result.Total / (double)form.PageSize)
+				TotalPages = (int)Math.Ceiling(result.Total / (double)form.PageSize),
+				Authors = authors
 			};
 
 	        return View(model);
