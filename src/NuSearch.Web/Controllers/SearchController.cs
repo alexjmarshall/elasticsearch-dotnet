@@ -16,7 +16,20 @@ namespace NuSearch.Web.Controllers
 	    [HttpGet]
         public IActionResult Index(SearchForm form)
         {
-			var result = _client.Search<Package>(s => s);
+			var result = _client.Search<Package>(s => s
+				.Size(25)
+				// NEST functions map one-to-one with Elasticsearch query JSON
+				.Query(q => q
+					.MultiMatch(m => m
+						.Fields(f => f
+							.Fields(
+								p => p.Id, 
+								p => p.Summary)
+							)
+						.Query(form.Query)
+					)
+				)
+			);
 			var model = new SearchViewModel()
 			{
 				Hits = result.Hits,
