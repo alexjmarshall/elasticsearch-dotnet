@@ -17,6 +17,8 @@ namespace NuSearch.Web.Controllers
         public IActionResult Index(SearchForm form)
         {
 			var result = _client.Search<Package>(s => s
+				.From((form.Page - 1) * form.PageSize)
+				.Size(form.PageSize)
 				// NEST functions map one-to-one with Elasticsearch query JSON
 				.Query(q => q
 				    .Match(m => m
@@ -49,7 +51,8 @@ namespace NuSearch.Web.Controllers
 			{
 				Hits = result.Hits,
 				Total = result.Total,
-				Form = form
+				Form = form,
+				TotalPages = (int)Math.Ceiling(result.Total / (double)form.PageSize)
 			};
 
 	        return View(model);
