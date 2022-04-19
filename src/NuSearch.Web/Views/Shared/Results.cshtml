@@ -28,7 +28,7 @@
 						| <span>
 							<span class="glyphicon glyphicon-bookmark"></span> version: @lastVersion.Version
 						</span>
-						| <span><span class="glyphicon glyphicon-flash"></span>query score: @(Math.Round((Double)hit.Score, 2))</span>
+						| <span><span class="glyphicon glyphicon-flash"></span>query score: @(Math.Round((Double)hit.Score.GetValueOrDefault(), 2))</span>
 					</h4>
 					<h4 class="text-humble">@package.Summary</h4>
 				</div>
