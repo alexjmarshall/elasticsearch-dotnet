@@ -20,10 +20,25 @@ namespace NuSearch.Web.Controllers
 				.Size(25)
 				// NEST functions map one-to-one with Elasticsearch query JSON
 				.Query(q => q
-					.MultiMatch(m => m
-						.Fields(f => f.Fields(p => p.Id, p => p.Summary))
-						.Operator(Operator.And)
-						.Query(form.Query)
+					.FunctionScore(fs => fs
+						.MaxBoost(50)
+						.Functions(ff => ff
+							.FieldValueFactor(fvf => fvf
+								.Field(p => p.DownloadCount) // function score query allows the Download count itself to influence score
+								.Factor(0.0001)
+							)
+						)
+						.Query(query => query
+							.MultiMatch(m => m
+								.Fields(f => f
+									.Field(p => p.Id.Suffix("keyword"), 1.5) // boost matches on Id keyword and Id terms over Summary terms
+									.Field(p => p.Id, 1.5)
+									.Field(p => p.Summary, 0.8)
+								)
+								.Operator(Operator.And)
+								.Query(form.Query)
+							)
+						)
 					)
 				)
 			);
