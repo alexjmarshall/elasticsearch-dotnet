@@ -10,5 +10,3 @@
 7) navigate to `src\NuSearch.Indexer` and enter `dotnet run` to index the data into Elasticsearch (and grab a :coffee:)
 8) after the data has been indexed, navigate to `src\NuSearch.Web` and enter `dotnet run` to start the Web application at <http://localhost:8080>
 9) search for packages using the input box and filter the results by selecting one or more package authors
-
-Thanks!
